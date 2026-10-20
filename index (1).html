@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muaz Bani Marei — Security work</title>
+<meta name="description" content="Cybersecurity student at Illinois Institute of Technology. Vulnerability assessment, network reconnaissance, and infrastructure automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:    #F6F7F9;
+    --card:     #FFFFFF;
+    --ink:      #16202B;
+    --ink-soft: #55616E;
+    --rule:     #D9DEE4;
+    --link:     #1B5E6E;
+    --sev-high: #A62B22;
+    --sev-med:  #8C5A0C;
+    --sev-low:  #3B6550;
+
+    --sans:  "IBM Plex Sans", system-ui, sans-serif;
+    --serif: "Source Serif 4", Georgia, serif;
+    --mono:  "IBM Plex Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  a {
+    color: var(--link);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  code, .mono { font-family: var(--mono); font-size: 0.9em; }
+
+  /* ---- masthead ---- */
+
+  .masthead { padding: 5rem 0 3rem; }
+
+  .masthead h1 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(2.25rem, 7vw, 3.5rem);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 1.25rem;
+  }
+
+  .standfirst {
+    font-size: 1.1875rem;
+    line-height: 1.55;
+    max-width: 34rem;
+    margin: 0 0 2rem;
+  }
+
+  .contact {
+    font-family: var(--sans);
+    font-size: 0.9375rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .contact span { color: var(--ink-soft); }
+
+  /* ---- sections ---- */
+
+  section { padding: 3.5rem 0; border-top: 1px solid var(--rule); }
+
+  h2 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    letter-spacing: 0.01em;
+    margin: 0 0 2.25rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---- engagements ---- */
+
+  .engagement {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .engagement:last-child { margin-bottom: 0; }
+
+  .engagement h3 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.1875rem;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin: 0 0 0.35rem;
+  }
+
+  .meta {
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+  }
+
+  .breakdown { margin: 0; }
+  .breakdown > div {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 1.25rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .breakdown dt {
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    padding-top: 0.15rem;
+  }
+  .breakdown dd { margin: 0; }
+
+  /* ---- findings ---- */
+
+  .findings {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  .findings li {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1.25rem;
+    padding: 0.45rem 0;
+    align-items: baseline;
+  }
+
+  .sev {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.15rem 0;
+    border-radius: 2px;
+  }
+  .sev-high { color: var(--sev-high); background: #FBEDEC; }
+  .sev-med  { color: var(--sev-med);  background: #FAF2E2; }
+  .sev-low  { color: var(--sev-low);  background: #EBF3EE; }
+
+  /* ---- skills ---- */
+
+  .skills > div {
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: 1.5rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .skills > div:last-child { border-bottom: 1px solid var(--rule); }
+  .skills dt {
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+  .skills dd { margin: 0; font-family: var(--mono); font-size: 0.9375rem; line-height: 1.7; }
+
+  /* ---- credentials ---- */
+
+  .cred { margin-bottom: 2rem; }
+  .cred:last-child { margin-bottom: 0; }
+  .cred h3 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    margin: 0 0 0.2rem;
+  }
+  .cred p { margin: 0; color: var(--ink-soft); }
+  .cred ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
+  .cred li { margin-bottom: 0.3rem; }
+
+  footer {
+    padding: 3rem 0 4rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 34rem) {
+    .breakdown > div,
+    .findings li,
+    .skills > div { grid-template-columns: 1fr; gap: 0.35rem; }
+    .sev { justify-self: start; padding: 0.15rem 0.6rem; }
+    .masthead { padding-top: 3rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <h1>Muaz Bani Marei</h1>
+    <p class="standfirst">Cybersecurity student at Illinois Institute of Technology. I run vulnerability assessments in a lab environment and write up what I find — scope, evidence, severity, and what to fix first.</p>
+    <div class="contact">
+      <a href="mailto:[your-email]">[your-email]</a>
+      <a href="https://github.com/Mezzoo7">github.com/Mezzoo7</a>
+      <a href="https://linkedin.com/in/[handle]">LinkedIn</a>
+      <a href="resume.pdf">Resume (PDF)</a>
+      <span>Chicago, IL</span>
+    </div>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>Security work</h2>
+
+      <article class="engagement">
+        <h3>Reconnaissance and attack-surface assessment</h3>
+        <p class="meta">Authorized target: certifiedhacker.com · Illinois Tech coursework · [Month Year]</p>
+
+        <dl class="breakdown">
+          <div>
+            <dt>Scope</dt>
+            <dd>Passive and active reconnaissance of a single public domain and its mail, DNS, and hosting infrastructure. No exploitation.</dd>
+          </div>
+          <div>
+            <dt>Method</dt>
+            <dd>WHOIS and DNS enumeration (<code>dig</code>, <code>nslookup</code>), subdomain discovery with theHarvester and Netcraft, path analysis with <code>traceroute</code>, service and version detection with Nmap, web checks with Nikto, then manual validation of each candidate CVE.</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Eight-page report covering executive summary, passive findings, active findings, vulnerability analysis, and prioritized remediation. Twenty-one subdomains mapped, including exposed administrative interfaces.</dd>
+          </div>
+        </dl>
+
+        <ul class="findings">
+          <li><span class="sev sev-high">High</span><span>MySQL 5.7.44 and PostgreSQL reachable from the public internet — no network-level restriction on database ports.</span></li>
+          <li><span class="sev sev-high">High</span><span>No DMARC record and a neutral SPF policy (<code>?all</code>), leaving the domain trivially spoofable in phishing campaigns.</span></li>
+          <li><span class="sev sev-med">Medium</span><span>Cleartext FTP (Pure-FTPd) exposed on port 21 alongside credentialed webmail and cPanel interfaces.</span></li>
+          <li><span class="sev sev-low">Ruled out</span><span>A reported Exim vulnerability (CVE-2010-4344) flagged by version matching was manually tested and confirmed not exploitable — reported as a false positive rather than padding the finding count.</span></li>
+        </ul>
+      </article>
+
+      <article class="engagement">
+        <h3>Vulnerability assessment of a deliberately vulnerable host</h3>
+        <p class="meta">Metasploitable 2 in an isolated lab · ITMS 448 Cyber Security Technologies · Fall 2026</p>
+
+        <dl class="breakdown">
+          <div>
+            <dt>Scope</dt>
+            <dd>Full-service enumeration and vulnerability identification against a Metasploitable 2 target, with SIEM visibility across the assessment.</dd>
+          </div>
+          <div>
+            <dt>Method</dt>
+            <dd>Built the lab in VirtualBox: Kali Linux and Metasploitable on a host-only network, with a second Kali interface routed to a Wazuh SIEM instance. Scanning with Nmap NSE (<code>--script vuln</code>, <code>--script vulners</code>) and Nikto after an OpenVAS feed sync proved too slow to be practical.</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>In progress. Findings are being validated individually, scored with CVSS, and ranked for a report covering scope, evidence, prioritization, and remediation. <a href="#">Writeup goes here when it's done.</a></dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="engagement">
+        <h3>Reproducible lab infrastructure and secrets management</h3>
+        <p class="meta">Cyber Range volunteer program · Illinois Tech · [Month Year] – present</p>
+
+        <dl class="breakdown">
+          <div>
+            <dt>Scope</dt>
+            <dd>Stand up a reproducible multi-VM environment for security coursework, with centralized secrets rather than credentials in config files.</dd>
+          </div>
+          <div>
+            <dt>Method</dt>
+            <dd>Vagrant for Ubuntu provisioning; Packer to build custom <code>ubuntu-server</code>, <code>vault-server</code>, and <code>vault-client</code> images; HashiCorp Vault for secret storage, with policy authoring and token-scoped access.</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Vault initialized, unsealed, and verified end to end from a separate client node. Managed SSH keypairs and multi-host SSH config across university and GitHub infrastructure. Advancing to the remote cluster phase.</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="engagement">
+        <h3>Multi-site network design under PCI DSS</h3>
+        <p class="meta">Restaurant chain design brief · ITMO 340 Data Networks and the Internet · [Term Year]</p>
+
+        <dl class="breakdown">
+          <div>
+            <dt>Scope</dt>
+            <dd>Complete network architecture for a restaurant chain across multiple locations, handling card payments at every site.</dd>
+          </div>
+          <div>
+            <dt>Method</dt>
+            <dd>IP addressing and subnet plan, VLAN segmentation isolating cardholder data from guest Wi-Fi and corporate traffic, redundancy at the WAN edge, and logical plus physical topology diagrams.</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Written design report with the segmentation rationale mapped to PCI DSS scope-reduction requirements.</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="engagement">
+        <h3>Applied cryptography lab</h3>
+        <p class="meta">GPG, OpenSSL, hashing and encoding on Kali · ITMS 448 Cyber Security Technologies · September 2026</p>
+
+        <dl class="breakdown">
+          <div>
+            <dt>Scope</dt>
+            <dd>Four exercises: symmetric encryption with GPG, asymmetric RSA with OpenSSL, cryptographic hashing, and base64 encoding.</dd>
+          </div>
+          <div>
+            <dt>Method</dt>
+            <dd>Generated an RSA keypair and encrypted and decrypted with <code>rsautl</code>, compared MD5, SHA-1 and SHA-256 digest lengths, produced a salted SHA-256 hash with <code>mkpasswd</code>, and verified that base64 is encoding rather than encryption.</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Found two errors in the lab instructions. The handout's file-integrity command hashed the <em>file path string</em> rather than the file's contents, which would make it useless for detecting tampering. The handout also expected CAST5 as the default GPG cipher, written for GPG 2.0, while the current release defaults to AES-256. Noted that <code>rsautl</code> is deprecated in OpenSSL 3.0 in favor of <code>pkeyutl</code>.</dd>
+          </div>
+        </dl>
+      </article>
+    </section>
+
+    <section>
+      <h2>Tools I've actually used</h2>
+      <dl class="skills">
+        <div>
+          <dt>Assessment</dt>
+          <dd>Nmap (NSE), Nikto, theHarvester, GVM/OpenVAS, dig, nslookup, traceroute</dd>
+        </div>
+        <div>
+          <dt>Defense</dt>
+          <dd>Wazuh SIEM, HashiCorp Vault, SSH key management</dd>
+        </div>
+        <div>
+          <dt>Systems</dt>
+          <dd>Kali Linux, Ubuntu Server, Windows, PowerShell</dd>
+        </div>
+        <div>
+          <dt>Infrastructure</dt>
+          <dd>VirtualBox, Vagrant, Packer, Git</dd>
+        </div>
+        <div>
+          <dt>Code</dt>
+          <dd>Python, Java, SQL (MySQL, JDBC)</dd>
+        </div>
+        <div>
+          <dt>Frameworks</dt>
+          <dd>CVSS, NIST SP 800-12, PCI DSS</dd>
+        </div>
+        <div>
+          <dt>Cryptography</dt>
+          <dd>GPG, OpenSSL, MD5/SHA-1/SHA-256 hashing, salted hashes</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Education and certifications</h2>
+
+      <div class="cred">
+        <h3>Illinois Institute of Technology</h3>
+        <p>B.S. in Information Technology and Management, cybersecurity concentration · Chicago, IL · junior, graduating Fall 2027</p>
+        <p style="margin-top:0.5rem">Security coursework: ITMS 448 Cyber Security Technologies, ITMS 478 Cyber Security Management, ITMO 340 Data Networks and the Internet, ITMO 356 Open Source Operating Systems. ITMS 443 Vulnerability Analysis and Control in Spring 2027.</p>
+      </div>
+
+      <div class="cred">
+        <h3>Certifications</h3>
+        <ul>
+          <li>Google Cybersecurity Professional Certificate — [Year]</li>
+          <li>CompTIA Network+ — in progress, sitting [Month Year]</li>
+          <li>CompTIA Linux+ — in progress, sitting [Month Year]</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Last updated October 2026. Built as a static page, no tracking.
+  </footer>
+
+</div>
+
+</body>
+</html>
